@@ -16,7 +16,7 @@ const server = app.listen(port, () => {
 	console.log(`server listening on ${port}`);
 });
 
-const projetData = [];
+const projetData = {};
 app.get('/all', (req, res) => {
 	res.send(projetData);
 });
@@ -40,8 +40,7 @@ app.post('/apiData', (req, res) => {
 	console.log('i got a request');
 	const apiData = req.body;
 	// console.log(apiData);
-	// console.log(newEntery);
-	projetData.push(createProjetData(apiData));
-	// console.log(projetData);
+	projetData.newEntry = createProjetData(apiData);
+	console.log(projetData);
 	res.send(projetData);
 });

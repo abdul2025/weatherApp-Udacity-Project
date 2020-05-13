@@ -16,14 +16,18 @@ const objDOM = {
 	imgIcon: document.getElementById('icon'),
 	body: document.getElementsByTagName('body'),
 	historyList: document.getElementById('history-list'),
+	invalidInputs: document.getElementById('invalid-inputs'),
+	overlay: document.getElementById('overlay'),
 };
 
 async function retriveWeatherApi(url, apiKey, cityName) {
+	let api = await fetch(`${url}${cityName}${apiKey}`);
 	try {
-		let api = await fetch(`${url}${cityName}${apiKey}`);
 		const data = api.json();
-		return data;
+		const result = await data;
+		return result;
 	} catch (Error) {
+		objDOM.overlay.style.display = 'grid';
 		console.log('err weather API');
 		console.log(Error);
 	}
@@ -40,6 +44,7 @@ async function postData(url, data) {
 		// console.log(json);
 		retriveData();
 	} catch (Error) {
+		objDOM.overlay.style.display = 'grid';
 		console.log('err postDate');
 		console.log(Error);
 	}
@@ -74,11 +79,10 @@ async function preformRequest(e) {
 		// console.log(recievedApi);
 		if (recievedApi.cod === 200) {
 			postData('/apiData', sendData(recievedApi));
+		} else if (recievedApi.cod != 401) {
+			objDOM.invalidInputs.style.display = 'block';
 		} else {
-			objDOM.userInput.insertAdjacentHTML(
-				'afterend',
-				'<h4 id="invalid-inputs">invalid city name</h4>'
-			);
+			objDOM.overlay.style.display = 'grid';
 		}
 
 		// console.log(sendData(recievedApi));
@@ -89,17 +93,17 @@ async function preformRequest(e) {
 			urlObj.zipApiKey,
 			userInp
 		);
-		// console.log(recievedApi);
 		if (recievedApi.cod === 200) {
 			postData('/apiData', sendData(recievedApi));
+		} else if (recievedApi.cod !== 401) {
+			objDOM.invalidInputs.style.display = 'block';
 		} else {
-			objDOM.userInput.insertAdjacentHTML(
-				'afterend',
-				'<h4>invalid zip code </h4>'
-			);
+			objDOM.overlay.style.display = 'grid';
 		}
 	} else {
-		console.log('Invalid input');
+		objDOM.overlay.style.display = 'grid';
+		// console.log(recievedApi);
+		// console.log('Invalid input');
 	}
 }
 
@@ -112,35 +116,30 @@ async function retriveData() {
 }
 
 function updateUI(data) {
-	console.log(data);
-	objDOM.cityName.textContent = data[data.length - 1].cityName;
-	objDOM.countyName.textContent = `, ${data[data.length - 1].countryName}`;
-	objDOM.condation.textContent = data[data.length - 1].weatherDesc;
-	objDOM.temp.textContent = ` ${Math.round(data[data.length - 1].temp)}° C`;
-	objDOM.wind.textContent = `Wind speed: ${Math.round(
-		data[data.length - 1].wind
-	)}mph`;
+	// console.log(data);
+	objDOM.cityName.textContent = data.newEntry.cityName;
+	objDOM.countyName.textContent = `, ${data.newEntry.countryName}`;
+	objDOM.condation.textContent = data.newEntry.weatherDesc;
+	objDOM.temp.textContent = ` ${Math.round(data.newEntry.temp)}° C`;
+	objDOM.wind.textContent = `Wind speed: ${Math.round(data.newEntry.wind)}mph`;
 	objDOM.imgIcon.setAttribute(
 		'src',
-		`http://openweathermap.org/img/wn/${data[data.length - 1].icon}.png`
+		`http://openweathermap.org/img/wn/${data.newEntry.icon}.png`
 	);
-	objDOM.body[0].style = `background-image: url(../imgs/${
-		data[data.length - 1].weatherDesc
-	}.jpg)`;
+	objDOM.body[0].style = `background-image: url(../imgs/${data.newEntry.weatherDesc}.jpg)`;
 	updateHistory(data);
-	document.getElementById('invalid-inputs').style.display = 'none';
-	init();
 }
 
 function updateHistory(data) {
 	const html = `<li>
 		<span>Input: "${objDOM.userInput.value}"</span>
 		<span>Comments: "${objDOM.userComment.value}"</span>
-		<span>${data[data.length - 1].countryName}</span>
-		<span>${data[data.length - 1].cityName}</span>
-		<span>${Math.round(data[data.length - 1].temp)}° C</span>
+		<span>${data.newEntry.countryName}</span>
+		<span>${data.newEntry.cityName}</span>
+		<span>${Math.round(data.newEntry.temp)}° C</span>
 	</li>`;
 	objDOM.historyList.insertAdjacentHTML('beforeend', html);
+	init();
 }
 
 genrate.addEventListener('click', preformRequest);
@@ -149,5 +148,7 @@ const init = () => {
 	objDOM.userInput.value = '';
 	objDOM.userComment.value = '';
 	objDOM.userInput.focus();
+	objDOM.invalidInputs.style.display = 'none';
+	objDOM.overlay.style.display = 'none';
 };
 init();

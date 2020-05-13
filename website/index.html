@@ -19,6 +19,10 @@
 			weather app
 		</button> -->
 
+		<div id="overlay">
+			<h1>We are Sorry!</h1>
+			<h2>Our Weather API is currently unavailable! try again later</h2>
+		</div>
 		<div class="page-wrapper">
 			<header class="top-header">
 				<h3 class="app-name">weather app</h3>
@@ -27,14 +31,15 @@
 				<div class="incoming-content">
 					<div class="inputs">
 						<label for="zip-city"
-							>Enter your city Name OR Enter your zip Code</label
+							>Enter your city Name OR Enter your US zip Code</label
 						>
 						<input
 							type="text"
 							name="zip-city"
 							id="zip-city"
-							placeholder="City Name OR Zip Code"
+							placeholder="City Name OR US Zip Code"
 						/>
+						<h4 id="invalid-inputs">invalid Input</h4>
 					</div>
 					<div class="text-area-inputs">
 						<label for="feeling">How is your feeling Today?</label>

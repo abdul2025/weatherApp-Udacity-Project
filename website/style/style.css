@@ -16,6 +16,7 @@ body {
 	background-size: cover;
 	-webkit-transition: background-image 0.2s ease-in-out;
 	transition: background-image 0.2s ease-in-out;
+	position: relative;
 }
 
 .page-wrapper {
@@ -182,4 +183,29 @@ li {
 
 span {
 	word-wrap: anywhere;
+}
+
+#invalid-inputs {
+	display: none;
+}
+
+#overlay {
+	background-color: #171717;
+	opacity: 0.5;
+	z-index: 10 !important;
+	height: 100%;
+	position: absolute;
+	width: 100%;
+	display: none;
+	justify-items: center;
+}
+
+#overlay h1 {
+	align-self: end;
+	color: white;
+}
+
+#overlay h2 {
+	color: white;
+	font-family: 'Times New Roman', Times, serif !important;
 }
