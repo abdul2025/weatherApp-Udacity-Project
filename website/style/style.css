@@ -172,16 +172,12 @@ h2 {
 	align-self: center;
 }
 
-li {
-	list-style: none;
+#entryHolder {
 	display: grid;
 	justify-items: center;
 	align-items: center;
-	background-color: #eeeeae;
+	background-color: #a7a799;
 	opacity: 0.7;
-}
-
-span {
 	word-wrap: anywhere;
 }
 

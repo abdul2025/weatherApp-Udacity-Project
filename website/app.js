@@ -117,27 +117,32 @@ async function retriveData() {
 
 function updateUI(data) {
 	// console.log(data);
-	objDOM.cityName.textContent = data.newEntry.cityName;
-	objDOM.countyName.textContent = `, ${data.newEntry.countryName}`;
-	objDOM.condation.textContent = data.newEntry.weatherDesc;
-	objDOM.temp.textContent = ` ${Math.round(data.newEntry.temp)}° C`;
-	objDOM.wind.textContent = `Wind speed: ${Math.round(data.newEntry.wind)}mph`;
+	objDOM.cityName.innerHTML = data.newEntry.cityName;
+	objDOM.countyName.innerHTML = `, ${data.newEntry.countryName}`;
+	objDOM.condation.innerHTML = data.newEntry.weatherDesc;
+	objDOM.temp.innerHTML = ` ${Math.round(data.newEntry.temp)}° C`;
+	objDOM.wind.innerHTML = `Wind speed: ${Math.round(data.newEntry.wind)}mph`;
 	objDOM.imgIcon.setAttribute(
 		'src',
 		`http://openweathermap.org/img/wn/${data.newEntry.icon}.png`
 	);
 	objDOM.body[0].style = `background-image: url(../imgs/${data.newEntry.weatherDesc}.jpg)`;
-	updateHistory(data);
+	entryHolder(data);
 }
 
-function updateHistory(data) {
-	const html = `<li>
-		<span>Input: "${objDOM.userInput.value}"</span>
-		<span>Comments: "${objDOM.userComment.value}"</span>
-		<span>${data.newEntry.countryName}</span>
-		<span>${data.newEntry.cityName}</span>
-		<span>${Math.round(data.newEntry.temp)}° C</span>
-	</li>`;
+const date = new Date();
+const dateString = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`;
+console.log(dateString);
+
+function entryHolder(data) {
+	const html = `<div id="entryHolder">
+		<div id ="content">content: "${objDOM.userInput.value}"</div>
+		<div id ="contentComment">Comments: "${objDOM.userComment.value}"</div>
+		<div id ="countryName">${data.newEntry.countryName}</div>
+		<div id="cityName">${data.newEntry.cityName}</div>
+		<div id="temp">${Math.round(data.newEntry.temp)}° C</div>
+		<div id="date">${dateString}</div>
+	</div>`;
 	objDOM.historyList.insertAdjacentHTML('beforeend', html);
 	init();
 }
