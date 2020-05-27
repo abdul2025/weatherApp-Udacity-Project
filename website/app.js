@@ -1,8 +1,9 @@
+const start = performance.now();
 const urlObj = {
 	cityUrl: `http://api.openweathermap.org/data/2.5/weather?q=`,
-	cityApiKey: '&units=metric&APPID=780ae065c3854c8733dcae94ca8cac6a',
-	zipApiKey: '&units=metric&APPID=780ae065c3854c8733dcae94ca8cac6a',
+	apiKey: '&units=metric&APPID=780ae065c3854c8733dcae94ca8cac6a',
 	zipUrl: 'http://api.openweathermap.org/data/2.5/weather?zip=',
+	lotAndlon: 'api.openweathermap.org/data/2.5/weather?',
 };
 const objDOM = {
 	genrate: document.getElementById('genrate'),
@@ -20,135 +21,172 @@ const objDOM = {
 	overlay: document.getElementById('overlay'),
 };
 
-async function retriveWeatherApi(url, apiKey, cityName) {
-	let api = await fetch(`${url}${cityName}${apiKey}`);
-	try {
-		const data = api.json();
-		const result = await data;
-		return result;
-	} catch (Error) {
-		objDOM.overlay.style.display = 'grid';
-		console.log('err weather API');
-		console.log(Error);
-	}
-}
-async function postData(url, data) {
-	const response = await fetch(url, {
-		method: 'POST',
-		credentials: 'same-origin',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify(data),
-	});
-	try {
-		const json = await response.json();
-		// console.log(json);
-		retriveData();
-	} catch (Error) {
-		objDOM.overlay.style.display = 'grid';
-		console.log('err postDate');
-		console.log(Error);
-	}
-}
-
-let key = 0;
-
-function sendData(api) {
-	return {
-		unique: key,
-		userInput: objDOM.userInput.value,
-		userComment: objDOM.userComment.value,
-		recievedApi: api,
-	};
-}
-
-async function preformRequest(e) {
-	// check the userInput city or zipCode
-	const type = isNaN(objDOM.userInput.value);
-	////////////////////////////////
-	////////////////////////////////
-	//// check if inputs type
-	//// check if the api response is valid
-	//// call the api send request to backend
-	if (objDOM.userInput.value.length > 0 && type) {
-		// console.log(true);
-		const recievedApi = await retriveWeatherApi(
-			urlObj.cityUrl,
-			urlObj.cityApiKey,
-			objDOM.userInput.value
-		);
-		// console.log(recievedApi);
-		if (recievedApi.cod === 200) {
-			postData('/apiData', sendData(recievedApi));
-		} else if (recievedApi.cod != 401) {
-			objDOM.invalidInputs.style.display = 'block';
-		} else {
-			objDOM.overlay.style.display = 'grid';
+function geolocation() {
+	let lat, lon;
+	// current location for user
+	if ('geolocation' in navigator) {
+		navigator.geolocation.getCurrentPosition(async (position) => {
+			lat = position.coords.latitude.toFixed();
+			lon = position.coords.longitude.toFixed();
+			const api_url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}${urlObj.apiKey}`;
+			// console.log(lat, lon);
+			const response = await fetch(api_url);
+			const json = await response.json();
+			// console.log(json);
+			postData('/apiData', sendData(json));
+			//check preformance after geolocation
+			const end = performance.now();
+			const preformTimeout = end - start;
+			console.log(preformTimeout);
+		});
+		// city api
+		async function retriveWeatherApi(url, apiKey, cityName) {
+			let api = await fetch(`${url}${cityName}${apiKey}`);
+			try {
+				const data = api.json();
+				const result = await data;
+				return result;
+			} catch (Error) {
+				objDOM.overlay.style.display = 'grid';
+				console.log('err weather API');
+				console.log(Error);
+			}
+		}
+		// post the weather data to backend
+		async function postData(url, data) {
+			const response = await fetch(url, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(data),
+			});
+			try {
+				const json = await response.json();
+				// console.log(json);
+				retriveData();
+			} catch (Error) {
+				objDOM.overlay.style.display = 'grid';
+				console.log('err postDate');
+				console.log(Error);
+			}
 		}
 
-		// console.log(sendData(recievedApi));
-	} else if (objDOM.userInput.value.length > 0 && !type) {
-		const userInp = `${objDOM.userInput.value},us`;
-		const recievedApi = await retriveWeatherApi(
-			urlObj.zipUrl,
-			urlObj.zipApiKey,
-			userInp
-		);
-		if (recievedApi.cod === 200) {
-			postData('/apiData', sendData(recievedApi));
-		} else if (recievedApi.cod !== 401) {
-			objDOM.invalidInputs.style.display = 'block';
-		} else {
-			objDOM.overlay.style.display = 'grid';
+		let key = 0;
+		// create object hold a certain data sent to the backend
+		function sendData(api) {
+			return {
+				unique: key,
+				userInput: objDOM.userInput.value,
+				userComment: objDOM.userComment.value,
+				recievedApi: api,
+			};
 		}
-	} else {
-		objDOM.overlay.style.display = 'grid';
-		// console.log(recievedApi);
-		// console.log('Invalid input');
-	}
-}
+		// make an action to the user request
+		async function preformRequest(e) {
+			// check the userInput city or zipCode
+			const type = isNaN(objDOM.userInput.value);
+			////////////////////////////////
+			////////////////////////////////
+			//// check if inputs type
+			//// check if the api response is valid
+			//// call the api send request to backend
+			if (objDOM.userInput.value.length > 0 && type) {
+				// console.log(true);
+				const recievedApi = await retriveWeatherApi(
+					urlObj.cityUrl,
+					urlObj.apiKey,
+					objDOM.userInput.value
+				);
+				// console.log(recievedApi);
+				if (recievedApi.cod === 200) {
+					postData('/apiData', sendData(recievedApi));
+				} else if (recievedApi.cod != 401) {
+					objDOM.invalidInputs.style.display = 'block';
+				} else {
+					objDOM.overlay.style.display = 'grid';
+				}
 
-async function retriveData() {
-	let data = await fetch('/all');
-	const finalData = await data.json();
-	// console.log(finalData);
-	updateUI(finalData);
-	key++;
-}
+				// console.log(sendData(recievedApi));
+				// search by zip code
+			} else if (objDOM.userInput.value.length > 0 && !type) {
+				const userInp = `${objDOM.userInput.value},us`;
+				const recievedApi = await retriveWeatherApi(
+					urlObj.zipUrl,
+					urlObj.apiKey,
+					userInp
+				);
+				if (recievedApi.cod === 200) {
+					postData('/apiData', sendData(recievedApi));
+				} else if (recievedApi.cod !== 401) {
+					objDOM.invalidInputs.style.display = 'block';
+				} else {
+					objDOM.overlay.style.display = 'grid';
+				}
+			} else {
+				objDOM.overlay.style.display = 'grid';
+				// console.log(recievedApi);
+				// console.log('Invalid input');
+			}
+		}
+		//// get the certain data from the server
+		async function retriveData() {
+			let data = await fetch('/all');
+			const finalData = await data.json();
+			// console.log(finalData);
+			updateUI(finalData);
+			key++;
+		}
+		// update the UI with the right retriveData
+		function updateUI(data) {
+			// console.log(data);
+			objDOM.cityName.innerHTML = data.newEntry.cityName;
+			objDOM.countyName.innerHTML = `, ${data.newEntry.countryName}`;
+			objDOM.condation.innerHTML = data.newEntry.weatherDesc;
+			objDOM.temp.innerHTML = ` ${Math.round(data.newEntry.temp)}° C`;
+			objDOM.wind.innerHTML = `Wind speed: ${Math.round(
+				data.newEntry.wind
+			)}mph`;
+			objDOM.imgIcon.setAttribute(
+				'src',
+				`http://openweathermap.org/img/wn/${data.newEntry.icon}.png`
+			);
+			objDOM.body[0].style = `background-image: url(../imgs/${data.newEntry.weatherDesc}.jpg)`;
+			entryHolder(data);
+		}
+		// date
+		const date = new Date();
+		const dateString = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`;
+		console.log(dateString);
 
-function updateUI(data) {
-	// console.log(data);
-	objDOM.cityName.innerHTML = data.newEntry.cityName;
-	objDOM.countyName.innerHTML = `, ${data.newEntry.countryName}`;
-	objDOM.condation.innerHTML = data.newEntry.weatherDesc;
-	objDOM.temp.innerHTML = ` ${Math.round(data.newEntry.temp)}° C`;
-	objDOM.wind.innerHTML = `Wind speed: ${Math.round(data.newEntry.wind)}mph`;
-	objDOM.imgIcon.setAttribute(
-		'src',
-		`http://openweathermap.org/img/wn/${data.newEntry.icon}.png`
-	);
-	objDOM.body[0].style = `background-image: url(../imgs/${data.newEntry.weatherDesc}.jpg)`;
-	entryHolder(data);
-}
-
-const date = new Date();
-const dateString = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`;
-console.log(dateString);
-
-function entryHolder(data) {
-	const html = `<div id="entryHolder">
-		<div id ="content">content: "${objDOM.userInput.value}"</div>
-		<div id ="contentComment">Comments: "${objDOM.userComment.value}"</div>
+		// create DOM elements
+		function entryHolder(data) {
+			if (objDOM.userInput.value == '') {
+				const html = `<div id="entryHolder">
 		<div id ="countryName">${data.newEntry.countryName}</div>
 		<div id="cityName">${data.newEntry.cityName}</div>
 		<div id="temp">${Math.round(data.newEntry.temp)}° C</div>
 		<div id="date">${dateString}</div>
-	</div>`;
-	objDOM.historyList.insertAdjacentHTML('beforeend', html);
-	init();
+		</div>`;
+				objDOM.historyList.insertAdjacentHTML('beforeend', html);
+			} else {
+				const html = `<div id="entryHolder">
+			<div id ="content">content: "${objDOM.userInput.value}"</div>
+			<div id ="contentComment">Comments: "${objDOM.userComment.value}"</div>
+			<div id ="countryName">${data.newEntry.countryName}</div>
+			<div id="cityName">${data.newEntry.cityName}</div>
+			<div id="temp">${Math.round(data.newEntry.temp)}° C</div>
+			<div id="date">${dateString}</div>
+		</div>`;
+				objDOM.historyList.insertAdjacentHTML('beforeend', html);
+			}
+		}
+		genrate.addEventListener('click', preformRequest);
+	} else {
+		console.log('geolocation not available');
+	}
 }
 
-genrate.addEventListener('click', preformRequest);
-
+// initialization
 const init = () => {
 	objDOM.userInput.value = '';
 	objDOM.userComment.value = '';
@@ -157,3 +195,5 @@ const init = () => {
 	objDOM.overlay.style.display = 'none';
 };
 init();
+
+geolocation();
