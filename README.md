@@ -1,6 +1,6 @@
 # WeatherApp 
 
-### open weather api
+## Open Weather Map
 
 
 ### Concept 
