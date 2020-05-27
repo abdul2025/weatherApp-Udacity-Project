@@ -4,7 +4,7 @@
 
 
 ### Concept 
-  -Fatch api for 
+  - Fatch api for 
     - user geoloaction
     - user input city name 
     - user input zipCode
