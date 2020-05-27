@@ -5,17 +5,17 @@
 
 ### Concept 
   - Fatch api for 
-    - user geoloaction
-    - user input city name 
-    - user input zipCode
+    - User geoloaction
+    - User input city name 
+    - User input zipCode
   - Send and Store certain Data from the fatched api to backend side
-    - user inputs 
-    - user comments
-    - needed data from fatched api
-    - store an object and send it back to client side
+    - User inputs 
+    - User comments
+    - Needed data from fatched api
+    - Store an object and send it back to client side
   - Display 
-    - in the user weather tamp
-    - history temp
+    - In the user weather tamp
+    - History temp
 
 
 ### Technologies 
