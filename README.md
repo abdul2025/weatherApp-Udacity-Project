@@ -4,14 +4,14 @@
 
 
 ### Concept 
-  - Fatch api for 
+  - Fetch api for 
     - User geoloaction
     - User input city name 
     - User input zipCode
-  - Send and Store certain Data from the fatched api to backend side
+  - Send and Store certain Data from the fetched api to backend side
     - User inputs 
     - User comments
-    - Needed data from fatched api
+    - Needed data from fetched api
     - Store an object and send it back to client side
   - Display 
     - In the user weather tamp
