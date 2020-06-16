@@ -23,7 +23,3 @@
 2. HTML
 3. CSS
 4. express 
-
-### link to the project
----
-[Page](https://abdul2025.github.io/weatherApp-Udacity-Project/website/index.html).
