@@ -26,4 +26,4 @@
 
 ### link to the project
 ---
-[Page](https://abdul2025.github.io/to-do-list/).
+[Page](https://abdul2025.github.io/weatherApp-Udacity-Project/).
