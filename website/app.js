@@ -33,11 +33,13 @@ function geolocation() {
 			const response = await fetch(api_url);
 			const json = await response.json();
 			// console.log(json);
-			postData('/apiData', sendData(json));
+			// console.log(json);
+			/////////////////////////////////// need to update UI as well
+			sendData(json);
 			//check preformance after geolocation
 			const end = performance.now();
 			const preformTimeout = end - start;
-			console.log(preformTimeout);
+
 		});
 		// city api
 		async function retriveWeatherApi(url, apiKey, cityName) {
@@ -61,7 +63,7 @@ function geolocation() {
 				body: JSON.stringify(data),
 			});
 			try {
-				const json = await response.json();
+				const json = await response;
 				// console.log(json);
 				retriveData();
 			} catch (Error) {
@@ -152,11 +154,12 @@ function geolocation() {
 			);
 			objDOM.body[0].style = `background-image: url(../imgs/${data.newEntry.weatherDesc}.jpg)`;
 			entryHolder(data);
+			init();
 		}
 		// date
 		const date = new Date();
 		const dateString = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`;
-		console.log(dateString);
+
 
 		// create DOM elements
 		function entryHolder(data) {
