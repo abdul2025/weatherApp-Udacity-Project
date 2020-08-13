@@ -1,85 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>weather Journal app</title>
-		<link rel="stylesheet" href="./style/style.css" />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			href="https://fonts.googleapis.com/css2?family=Gelasio&display=swap"
-			rel="stylesheet"
-		/>
-	</head>
-	<body>
-		<div id="overlay">
-			<h1>We are Sorry!</h1>
-			<h2>Our Weather API is currently unavailable! try again later</h2>
-		</div>
-		<div class="page-wrapper">
-			<header class="top-header">
-				<h3 class="app-name">weather app</h3>
-			</header>
-			<div class="sider">
-				<div class="incoming-content">
-					<div class="inputs">
-						<label for="zip-city"
-							>Enter your city Name OR Enter your US zip Code</label
-						>
-						<input
-							type="text"
-							name="zip-city"
-							id="zip-city"
-							placeholder="City Name OR US Zip Code"
-						/>
-						<h4 id="invalid-inputs">invalid Input</h4>
-					</div>
-					<div class="text-area-inputs">
-						<label for="feeling">How is your feeling Today?</label>
-						<textarea
-							name="feeling"
-							id="feeling"
-							cols="30"
-							rows="10"
-							class="feeling"
-						></textarea>
-					</div>
-					<button id="genrate">genrate</button>
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>weather Journal app</title>
+	<link rel="stylesheet" href="./style/style.css" />
+	<link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Gelasio&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+	<div id="overlay">
+		<h1>We are Sorry!</h1>
+		<h2>Our Weather API is currently unavailable! try again later</h2>
+	</div>
+	<div class="page-wrapper">
+		<header class="top-header">
+			<h3 class="app-name">weather app</h3>
+		</header>
+		<div class="sider">
+			<div class="incoming-content">
+				<div class="inputs">
+					<label for="zip-city">Enter your city Name OR Enter your US zip Code</label>
+					<input type="text" name="zip-city" id="zip-city" placeholder="City Name OR US Zip Code" />
+					<h4 id="invalid-inputs">invalid Input</h4>
 				</div>
-				<div class="displayIncoming">
-					<div class="dis-container">
-						<div id="weather-header">
-							<span id="city-name">Jeddah,</span
-							><span id="county-name">SA</span>
-							<!-- <h2 id="county-name">county</h2> -->
-						</div>
-						<div id="weather-content">
-							<img
-								id="icon"
-								src="http://openweathermap.org/img/wn/04d.png "
-								alt=""
-							/>
-							<h2 id="condation">Clouds</h2>
-						</div>
-						<div id="weather-bottom">
-							<div id="temp-wind">
-								<h2 id="temp">28° C</h2>
-								<h2 id="wind">Wind speed: 3mph</h2>
-							</div>
+				<div class="text-area-inputs">
+					<label for="feeling">How is your feeling Today?</label>
+					<textarea name="feeling" id="feeling" cols="30" rows="10" class="feeling"></textarea>
+				</div>
+				<button id="genrate">genrate</button>
+			</div>
+			<div class="displayIncoming">
+				<div class="dis-container">
+					<div id="weather-header">
+						<span id="city-name">Jeddah,</span><span id="county-name">SA</span>
+						<!-- <h2 id="county-name">county</h2> -->
+					</div>
+					<div id="weather-content">
+						<img id="icon" src="http://openweathermap.org/img/wn/04d.png " alt="" />
+						<h2 id="condation">Clouds</h2>
+					</div>
+					<div id="weather-bottom">
+						<div id="temp-wind">
+							<h2 id="temp">28° C</h2>
+							<h2 id="wind">Wind speed: 3mph</h2>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="history">
-				<div id="history-searched">
-					<h2>history</h2>
-					<ul id="history-list"></ul>
-				</div>
+		</div>
+		<div class="history">
+			<div id="history-searched">
+				<h2>history</h2>
+				<ul id="history-list"></ul>
 			</div>
 		</div>
-		<script src="./app.js"></script>
-	</body>
+	</div>
+	<script src="./app.js"></script>
+</body>
+
 </html>
