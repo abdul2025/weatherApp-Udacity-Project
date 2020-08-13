@@ -63,7 +63,7 @@ function geolocation() {
 				body: JSON.stringify(data),
 			});
 			try {
-				const json = await response;
+				const json = await response.json();
 				// console.log(json);
 				retriveData();
 			} catch (Error) {
